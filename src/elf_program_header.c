@@ -58,7 +58,7 @@ void print_ph_flag(Elf32_Phdr *elt) {
 }
 
 void print_program_header(Elf32_Phdr *arr, unsigned size_elt, unsigned nb) {
-    printf("program headers, nb %u\n", nb);
+    printf("-----------------------program headers-----------------------\n");
     for (unsigned k = 0; k < nb; k++) {
 
         printf("\n");
@@ -66,4 +66,5 @@ void print_program_header(Elf32_Phdr *arr, unsigned size_elt, unsigned nb) {
         print_ph_type(elt);
         print_ph_flag(elt);
     }
+    printf("\n");
 }

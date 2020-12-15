@@ -11,6 +11,7 @@
 #include "elf_reader.h"
 #include "elf_header.h"
 #include "elf_program_header.h"
+#include "elf_section_header.h"
 
 void * open_and_map(const char* path, off_t* size) {
     int fd = open(path, O_RDONLY);
@@ -106,10 +107,16 @@ int elf_read(const char* path) {
         print_elf_type(header);
         print_entry(header);
         printf("ph offset %u\n", header->e_phoff);
+
         Elf32_Phdr* ph = p_add_offset(header, header->e_phoff);
         printf("nb program headers %u\n", header->e_phnum);
         printf("program header size %u\n", header->e_phentsize);
         print_program_header(ph, header->e_phentsize, header->e_phnum);
+
+        Elf32_Shdr* sh = p_add_offset(header, header->e_shoff);
+        printf("nb program headers %u\n", header->e_shnum);
+        printf("program header size %u\n", header->e_shentsize);
+        print_section_header(sh, header->e_shentsize, header->e_shnum);
     }
 
     if (munmap(file, file_size)) {

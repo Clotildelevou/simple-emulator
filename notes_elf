@@ -1,0 +1,4 @@
+Handle elf:
+    parse elf header
+
+    program header tells how to create a process image
