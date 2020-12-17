@@ -114,9 +114,9 @@ int elf_read(const char* path) {
         print_program_header(ph, header->e_phentsize, header->e_phnum);
 
         Elf32_Shdr* sh = p_add_offset(header, header->e_shoff);
-        printf("nb program headers %u\n", header->e_shnum);
-        printf("program header size %u\n", header->e_shentsize);
-        print_section_header(sh, header->e_shentsize, header->e_shnum);
+        printf("nb section headers %u\n", header->e_shnum);
+        printf("section header size %u\n", header->e_shentsize);
+        print_section_header(header, sh);//, header->e_shentsize, header->e_shnum);
     }
 
     if (munmap(file, file_size)) {

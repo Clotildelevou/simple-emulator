@@ -1,6 +1,8 @@
 #include "elf_section_header.h"
 #include "pointer_arithmetic.h"
+#include "parser.h"
 
+#include <string.h>
 #include <elf.h>
 #include <stdio.h>
 
@@ -78,13 +80,34 @@ void print_sh_flag(Elf32_Shdr *elt) {
     printf("\n");
 }
 
-void print_section_header(Elf32_Shdr *arr, unsigned size_elt, unsigned nb) {
+
+void print_section_header(Elf32_Ehdr *header, Elf32_Shdr *arr) {
     printf("-----------------------section headers-----------------------\n");
-    for (unsigned k = 0; k < nb; k++) {
+
+    
+    // getting the strtab for printing section names
+    Elf32_Shdr* strtab =  p_add_offset(arr, header->e_shentsize * header->e_shstrndx);
+    char* strings =  p_add_offset(header, strtab->sh_offset);
+
+
+    unsigned shdr_size = header->e_shentsize;
+    unsigned shdr_nb   = header->e_shnum;
+    for (unsigned k = 0; k < shdr_nb; k++) {
         printf("\n");
-        Elf32_Shdr *elt = p_add_offset(arr, k * size_elt);
+        Elf32_Shdr *elt = p_add_offset(arr, k * shdr_size);
+        printf("name %s\n", strings + elt->sh_name);
         print_sh_type(elt);
         print_sh_flag(elt);
+        if (!strcmp(".text", strings + elt->sh_name)) {
+            uint32_t *inst = p_add_offset(header, elt->sh_offset);
+            uint32_t *end = p_add_offset(inst, elt->sh_size);
+            for (; inst < end; inst++) {
+                printf("%08x ", *inst);
+                print_binary(*inst);
+                print_parsed_inst(parse_single(*inst));
+                printf("\n");
+            }
+        }
     }
     printf("\n");
 }

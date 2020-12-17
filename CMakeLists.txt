@@ -10,9 +10,9 @@ add_executable(arm_emul "")
 target_include_directories(arm_emul PRIVATE "${CMAKE_SOURCE_DIR}/inc/")
 
 #source file
-set(SOURCE_FILES pointer_arithmetic.c elf_section_header.c elf_program_header.c elf_header.c elf_reader.c main.c)
+set(SOURCE_FILES pointer_arithmetic.c elf_section_header.c elf_program_header.c elf_header.c elf_reader.c parser.c main.c)
 list(TRANSFORM SOURCE_FILES PREPEND "src/")
 target_sources(arm_emul PRIVATE ${SOURCE_FILES})
 
-target_compile_options(arm_emul PRIVATE -Wall -Wextra -Werror -pedantic -g)
+target_compile_options(arm_emul PRIVATE -fdiagnostics-show-option -Wall -Wextra -Werror -g)
 
